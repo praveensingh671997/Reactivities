@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
-import ActivityDetails from '../details/ActivityDetails';
-import ActivityForm from '../form/ActivityForm';
 import ActivityList from './ActivityList';
 
 //{activities[0] && <ActivityDetails activity={activities[0]} />}
@@ -12,9 +11,14 @@ import ActivityList from './ActivityList';
 // and (false && expression) always evaluates to false. 
 
 export default observer(function ActivityDashboard() {
-
     const { activityStore } = useStore();
-    const { selectedActivity, editMode } = activityStore;
+    const { loadActivities, activityRegistry } = activityStore;
+
+    useEffect(() => {
+        if (activityRegistry.size <= 1) loadActivities();
+    }, [loadActivities, activityRegistry]);
+
+    if (activityStore.loadingInitial) return <LoadingComponent inverted content='Loading...' />
 
     return (
         <Grid>
@@ -22,11 +26,12 @@ export default observer(function ActivityDashboard() {
                 <ActivityList />
             </Grid.Column>
             <Grid.Column width="6">
-                {selectedActivity && !editMode &&
+                <h2>Activity filter</h2>
+                {/* {selectedActivity && !editMode &&
                     <ActivityDetails />}
 
                 {editMode &&
-                    <ActivityForm />}
+                    <ActivityForm />} */}
             </Grid.Column>
         </Grid>
     )
