@@ -21,6 +21,10 @@ function App() {
 
               <Route exact path='/activities' component={ActivityDashboard}></Route>
               <Route path='/activities/:id' component={ActivityDetails}></Route>
+              {
+                // same component called on different routes i.e. /createActivity and /manage/:id
+                // so we provide key here to tell react that it is different component 
+              }
               <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm}></Route>
             </Container>
           </>

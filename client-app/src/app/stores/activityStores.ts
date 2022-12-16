@@ -18,6 +18,21 @@ export default class ActivityStores {
         return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
+    get groupActivities() {
+        //Object.entries : Returns an array of key/values of the enumerable properties of an object
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date;
+                //console.log(activities)
+                //let a; a ? "not undefined and not null":"undefined and null"
+                //activities[date] ? console.log('...activity') : console.log('activity');
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+                //console.log("after", activities[date])
+                return activities;
+            }, {} as { [key: string]: Activity[] })
+        )
+    }
+
     //action
     loadActivities = async () => {
         this.loadingInitial = true;
